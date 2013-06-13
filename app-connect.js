@@ -3,21 +3,18 @@ var connectRoute = require('connect-route');
 var htutil = require('./htutil');
 
 
-connect.createServer()
-.use(connect.favicon())
-.use(connect.logger())
-.use('/filez', connect.static(__dirname + '/filez'))
-.use(connectRoute (function(app){
-	app.get('/',
-	require('./home-node').get);
-	app.get('/square', htutil.loadParams,
-	require('./square-node').get);
-	app.get('/factorial', htutil.loadParams,
-	require('./factorial-node').get);
-	app.get('/fibonacci', htutil.loadParams,
-	require('./fibo2-node').get);
-	app.get('/mult', htutil.loadParams,
-	require('./mult-node').get);
-})).listen(8124);
+var app = connect();
+app.use(connect.favicon())
+app.use(connect.logger())
+
+app.use(connectRoute(function (router){	
+	router.get('/', require('./home-node').get);
+    router.get('/square', require('./square-node').get);   
+    router.get('/factorial', require('./factorial-node').get);
+    router.get('/fibonacci', require('./fibo2-node').get);
+    router.get('/mult', require('./mult-node').get);
+}))
+
+app.listen(8124);
 
 console.log('listening to http://localhost:8124');
